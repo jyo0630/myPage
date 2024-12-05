@@ -66,16 +66,105 @@
       button:active {
         transform: translateY(0);
       }
+      .copy-id-button {
+        margin-top: 20px;
+        background: #2196f3;
+      }
+      .copy-id-button:hover {
+        background: #1e88e5;
+      }
+      input[type="text"] {
+        padding: 10px;
+        font-size: 1rem;
+        border: 2px solid #ddd;
+        border-radius: 5px;
+        width: calc(100% - 24px);
+        box-sizing: border-box;
+      }
+      .fortune-button {
+        margin-top: 20px;
+        background: #ff5722;
+      }
+      .fortune-button:hover {
+        background: #e64a19;
+      }
+      .fortune-result {
+        margin-top: 20px;
+        font-size: 1.2rem;
+        color: #444;
+      }
+      .change-bg-button {
+        margin-top: 20px;
+        background: #673ab7;
+      }
+      .change-bg-button:hover {
+        background: #5e35b1;
+      }
     </style>
   </head>
   <body>
-    <div class="container">
+    <div class="container" id="mainContainer">
       <h1>Jyo</h1>
       <img src="profile.png" alt="profile picture" />
       <p>原神に脳が侵食されている人です</p>
       <button onclick="location.href='mailto:tamajyo@icloud.com'">
         メールする
       </button>
+      <div id="gameIds"></div>
+      <button class="fortune-button" onclick="generateFortune()">
+        おみくじを引く
+      </button>
+      <p class="fortune-result" id="fortuneResult"></p>
+      <button class="change-bg-button" onclick="changeBackgroundColor()">
+        背景色を変える
+      </button>
     </div>
+
+    <script>
+      const gameIds = [
+        { id: "gameId1", value: "111111", name: "原神" },
+        { id: "gameId2", value: "GameID654321", name: "APEX" },
+        { id: "gameId3", value: "GameID111111", name: "VALORANT" },
+      ];
+
+      function renderGameId({ id, value, name }) {
+        return `
+          <input type="text" value="${value}" id="${id}" readonly />
+          <button class="copy-id-button" onclick="copyGameId('${id}')">${name}</button>
+        `;
+      }
+
+      function copyGameId(id) {
+        var copyText = document.getElementById(id);
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); // For mobile devices
+        navigator.clipboard.writeText(copyText.value);
+        alert("IDをコピーしました: " + copyText.value);
+      }
+
+      document.getElementById("gameIds").innerHTML = gameIds
+        .map(renderGameId)
+        .join("");
+
+      function generateFortune() {
+        const fortunes = [
+          "大吉: 今日は最高の一日になります！",
+          "中吉: 良いことがたくさんあります。",
+          "小吉: ちょっといいことがあるかも。",
+          "吉: 普通の一日ですが、悪くはありません。",
+          "凶: 少し注意が必要な一日です。",
+        ];
+        const randomFortune =
+          fortunes[Math.floor(Math.random() * fortunes.length)];
+        document.getElementById("fortuneResult").innerText = randomFortune;
+      }
+
+      function changeBackgroundColor() {
+        const colors = ["#ffffff", "#f1c40f", "#e74c3c", "#8e44ad", "#1abc9c"];
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+        document.getElementById("mainContainer").style.backgroundColor =
+          randomColor;
+      }
+    </script>
   </body>
 </html>
