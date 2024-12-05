@@ -26,6 +26,7 @@
         border-radius: 16px;
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
         transition: transform 0.3s, box-shadow 0.3s;
+        position: relative;
       }
       .container:hover {
         transform: translateY(-5px);
@@ -100,6 +101,15 @@
       .change-bg-button:hover {
         background: #5e35b1;
       }
+      .ball {
+        width: 100px;
+        height: 100px;
+        background-color: white;
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+      }
     </style>
   </head>
   <body>
@@ -118,6 +128,7 @@
       <button class="change-bg-button" onclick="changeBackgroundColor()">
         背景色を変える
       </button>
+      <div class="ball" id="ball"></div>
     </div>
 
     <script>
@@ -165,6 +176,33 @@
         document.getElementById("mainContainer").style.backgroundColor =
           randomColor;
       }
+
+      function moveBall() {
+        const ball = document.getElementById("ball");
+        let posX = 50;
+        let posY = 50;
+        let speedX = 4; // Increased speed
+        let speedY = 4; // Increased speed
+
+        function updatePosition() {
+          posX += speedX;
+          posY += speedY;
+
+          if (posX + 50 > window.innerWidth || posX - 50 < 0) {
+            speedX = -speedX;
+          }
+          if (posY + 50 > window.innerHeight || posY - 50 < 0) {
+            speedY = -speedY;
+          }
+
+          ball.style.left = posX + "px";
+          ball.style.top = posY + "px";
+        }
+
+        setInterval(updatePosition, 30);
+      }
+
+      moveBall();
     </script>
   </body>
 </html>
