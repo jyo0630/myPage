@@ -13,16 +13,16 @@
       body {
         font-family: "Poppins", Arial, sans-serif;
         text-align: center;
-        background: linear-gradient(135deg, #da5fff, #fd1361);
+        background: linear-gradient(135deg, #8e44ad, #3498db);
+        color: #333;
         margin: 0;
         padding: 0;
-        color: #333;
       }
       .container {
         max-width: 600px;
         margin: 50px auto;
         padding: 30px;
-        background: #fff;
+        background: #f7f7f7;
         border-radius: 16px;
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
         transition: transform 0.3s, box-shadow 0.3s;
@@ -36,86 +36,68 @@
         width: 140px;
         height: 140px;
         border-radius: 50%;
-        margin-top: 20px;
+        margin: 20px auto 0;
         border: 4px solid #eee;
       }
-      h1 {
-        font-size: 2.2rem;
-        margin: 20px 0 10px;
-        color: #333;
+      h1,
+      p,
+      .health,
+      .fortune-result {
+        margin: 20px 0;
       }
-      p {
-        font-size: 1.1rem;
-        margin-bottom: 30px;
-        color: #555;
-      }
-      button {
+      button,
+      input {
         padding: 12px 24px;
-        background: #4caf50;
-        color: #fff;
         border: none;
         border-radius: 25px;
-        font-size: 1rem;
-        font-weight: 600;
         cursor: pointer;
         transition: background 0.3s, transform 0.2s;
+        font-size: 1rem;
+      }
+      button {
+        background: #4caf50;
+        color: #fff;
       }
       button:hover {
         background: #45a049;
         transform: translateY(-2px);
       }
-      button:active {
-        transform: translateY(0);
-      }
       .copy-id-button {
-        margin-top: 20px;
+        margin-top: 10px;
         background: #2196f3;
-      }
-      .copy-id-button:hover {
-        background: #1e88e5;
-      }
-      input[type="text"] {
-        padding: 10px;
-        font-size: 1rem;
-        border: 2px solid #ddd;
-        border-radius: 5px;
-        width: calc(100% - 24px);
-        box-sizing: border-box;
       }
       .fortune-button {
         margin-top: 20px;
         background: #ff5722;
       }
-      .fortune-button:hover {
-        background: #e64a19;
-      }
-      .fortune-result {
-        margin-top: 20px;
-        font-size: 1.2rem;
-        color: #444;
-      }
       .change-bg-button {
         margin-top: 20px;
         background: #673ab7;
       }
-      .change-bg-button:hover {
-        background: #5e35b1;
-      }
       .ball {
         width: 100px;
         height: 100px;
-        background-color: white;
+        background-color: #ec407a;
         border-radius: 50%;
         position: absolute;
         top: 50%;
         left: 50%;
+        transform: translate(-50%, -50%);
+        cursor: pointer;
+      }
+      .health {
+        font-size: 1.2rem;
+        color: #444;
+        position: absolute;
+        top: 10px;
+        left: 10px;
       }
     </style>
   </head>
   <body>
-    <div class="container" id="mainContainer">
+    <div class="container">
       <h1>Jyo</h1>
-      <img src="profile.png" alt="profile picture" />
+      <img src="my.gif" alt="profile picture" />
       <p>原神に脳が侵食されている人です</p>
       <button onclick="location.href='mailto:tamajyo@icloud.com'">
         メールする
@@ -128,35 +110,28 @@
       <button class="change-bg-button" onclick="changeBackgroundColor()">
         背景色を変える
       </button>
+      <div class="health" id="health">Health: 100</div>
       <div class="ball" id="ball"></div>
     </div>
-
     <script>
       const gameIds = [
         { id: "gameId1", value: "111111", name: "原神" },
         { id: "gameId2", value: "GameID654321", name: "APEX" },
         { id: "gameId3", value: "GameID111111", name: "VALORANT" },
       ];
-
-      function renderGameId({ id, value, name }) {
-        return `
-          <input type="text" value="${value}" id="${id}" readonly />
-          <button class="copy-id-button" onclick="copyGameId('${id}')">${name}</button>
-        `;
-      }
-
+      document.getElementById("gameIds").innerHTML = gameIds
+        .map(
+          ({ id, value, name }) =>
+            `<input type="text" value="${value}" readonly />
+         <button class="copy-id-button" onclick="copyGameId('${id}')">${name}</button>`
+        )
+        .join("");
       function copyGameId(id) {
-        var copyText = document.getElementById(id);
+        var copyText = document.querySelector(`input[value="${id}"]`);
         copyText.select();
-        copyText.setSelectionRange(0, 99999); // For mobile devices
         navigator.clipboard.writeText(copyText.value);
         alert("IDをコピーしました: " + copyText.value);
       }
-
-      document.getElementById("gameIds").innerHTML = gameIds
-        .map(renderGameId)
-        .join("");
-
       function generateFortune() {
         const fortunes = [
           "大吉: 今日は最高の一日になります！",
@@ -165,43 +140,43 @@
           "吉: 普通の一日ですが、悪くはありません。",
           "凶: 少し注意が必要な一日です。",
         ];
-        const randomFortune =
+        document.getElementById("fortuneResult").innerText =
           fortunes[Math.floor(Math.random() * fortunes.length)];
-        document.getElementById("fortuneResult").innerText = randomFortune;
       }
-
       function changeBackgroundColor() {
-        const colors = ["#ffffff", "#f1c40f", "#e74c3c", "#8e44ad", "#1abc9c"];
-        const randomColor = colors[Math.floor(Math.random() * colors.length)];
-        document.getElementById("mainContainer").style.backgroundColor =
-          randomColor;
+        const colors = ["#ffffff", "#ffeb3b", "#e91e63", "#00bcd4", "#ff9800"];
+        document.querySelector(".container").style.backgroundColor =
+          colors[Math.floor(Math.random() * colors.length)];
       }
-
+      let health = 100;
+      const ball = document.getElementById("ball");
+      ball.addEventListener("click", () => {
+        health -= 1;
+        document.getElementById("health").innerText = `Health: ${health}`;
+        if (health <= 0) {
+          ball.style.display = "none";
+          setTimeout(reviveBall, 5000);
+        }
+      });
+      function reviveBall() {
+        health = 100;
+        document.getElementById("health").innerText = `Health: ${health}`;
+        ball.style.display = "block";
+      }
       function moveBall() {
-        const ball = document.getElementById("ball");
-        let posX = 50;
-        let posY = 50;
-        let speedX = 4; // Increased speed
-        let speedY = 4; // Increased speed
-
-        function updatePosition() {
+        let posX = 50,
+          posY = 50,
+          speedX = 4,
+          speedY = 4;
+        setInterval(() => {
           posX += speedX;
           posY += speedY;
-
-          if (posX + 50 > window.innerWidth || posX - 50 < 0) {
-            speedX = -speedX;
-          }
-          if (posY + 50 > window.innerHeight || posY - 50 < 0) {
-            speedY = -speedY;
-          }
-
+          if (posX + 50 > window.innerWidth || posX - 50 < 0) speedX = -speedX;
+          if (posY + 50 > window.innerHeight || posY - 50 < 0) speedY = -speedY;
           ball.style.left = posX + "px";
           ball.style.top = posY + "px";
-        }
-
-        setInterval(updatePosition, 30);
+        }, 30);
       }
-
       moveBall();
     </script>
   </body>
